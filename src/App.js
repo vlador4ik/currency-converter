@@ -51,7 +51,7 @@ function App() {
       <Block 
         value={toPrice}
         currency={toCurrency}
-        onChangeCurrency={setFromCurrency} 
+        onChangeCurrency={setToCurrency} 
         onChangeValue={onChangeToPrice} />
 
     </div>
