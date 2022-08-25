@@ -3,6 +3,29 @@ import { Block } from './Block';
 import './index.scss';
 
 function App() {
+  const [fromCurrency, setFromCurrency] = React.useState('UAH');
+  const [toCurrency, setToCurrency] = React.useState('USD');
+  const [fromPrice, setFromPrice] = React.useState(0);
+  const [toPrice, setToPrice] = React.useState(0);
+  const [rates, setRates] = React.useState({});
+  React.useEffect(() => {
+    fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json').then(res => res.json().then()).then(data => {
+      setRates(data)
+      console.log(data);
+    })
+    .catch((err) => {
+      console.warn(err);
+      alert('Не вдалось отримати інформацію, спробуйте пізніше!')
+    })
+      
+  }, [])
+
+  const onChangeFromPrice = (value) => {
+    setFromPrice(value);
+  }
+  const onChangeToPrice = (value) => {
+    setToPrice(value);
+  }
   return (
     <>
     <div className="title_wrapper">
@@ -10,7 +33,11 @@ function App() {
     </div>
     <div className="App">
       
-      <Block value={0} currency="UAH" onChangeCurrency={(cur) => console.log(cur)} />
+      <Block
+        value={fromPrice}
+        currency={fromCurrency}
+        onChangeCurrency={setFromCurrency} 
+        onChangeValue={onChangeFromPrice} />
       <div className='convert_logo'>
         <svg  x="0px" y="0px" width="70px" viewBox="0 0 506.568 506.568">
           <g>
@@ -21,7 +48,12 @@ function App() {
           </g>
         </svg>
       </div>
-      <Block value={0} currency="USD" />
+      <Block 
+        value={toPrice}
+        currency={toCurrency}
+        onChangeCurrency={setFromCurrency} 
+        onChangeValue={onChangeToPrice} />
+
     </div>
     </>
   );
