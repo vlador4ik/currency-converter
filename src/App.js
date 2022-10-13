@@ -7,11 +7,11 @@ function App() {
   const [toCurrency, setToCurrency] = React.useState('USD');
   const [fromPrice, setFromPrice] = React.useState(0);
   const [toPrice, setToPrice] = React.useState(0);
-  const [rates, setRates] = React.useState({});
+  const [rates, setRates] = React.useState([]);
+  const defaultCurrencies = ['USD', 'EUR', 'PLN', 'UAH'];
   React.useEffect(() => {
     fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json').then(res => res.json().then()).then(data => {
       setRates(data)
-      console.log(data);
     })
     .catch((err) => {
       console.warn(err);
@@ -19,6 +19,15 @@ function App() {
     })
       
   }, [])
+
+  const filteredCurrencies = [];
+  defaultCurrencies.forEach(cur => {
+     rates.filter((rate) => {
+      if(rate.cc == cur)
+      filteredCurrencies.push(rate)
+    })
+  })
+  
 
   const onChangeFromPrice = (value) => {
     setFromPrice(value);
@@ -34,8 +43,9 @@ function App() {
     <div className="App">
       
       <Block
+        currencies={filteredCurrencies}
         value={fromPrice}
-        currency={fromCurrency}
+        currentCurrency={fromCurrency}
         onChangeCurrency={setFromCurrency} 
         onChangeValue={onChangeFromPrice} />
       <div className='convert_logo'>
@@ -48,9 +58,10 @@ function App() {
           </g>
         </svg>
       </div>
-      <Block 
+      <Block
+        currencies={filteredCurrencies}
         value={toPrice}
-        currency={toCurrency}
+        currentCurrency={toCurrency}
         onChangeCurrency={setToCurrency} 
         onChangeValue={onChangeToPrice} />
 

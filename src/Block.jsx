@@ -1,17 +1,19 @@
 import React from 'react';
 
-const defaultCurrencies = ['UAH', 'USD', 'EUR', 'GBP'];
-
-export const Block = ({ value, currency, onChangeValue, onChangeCurrency }) => (
+export const Block = ({ currencies, value, currentCurrency, onChangeValue, onChangeCurrency }) => (
   <div className="block">
     <ul className="currencies">
-      {defaultCurrencies.map((cur) => (
+      <li className={currentCurrency == 'UAH' ? 'active' : ''}>
+        UAH
+      </li>
+      {
+      currencies.map((cur) => (
         <li
           onClick={() => onChangeCurrency(cur)}
-          title="Українська гривня"
-          className={currency === cur ? 'active' : ''}
-          key={cur}>
-          {cur}
+          title={cur.txt}
+          className={currentCurrency === cur.cc ? 'active' : ''}
+          key={cur.cc}>
+          {cur.cc}
         </li>
       ))}
       <li>
